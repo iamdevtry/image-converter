@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ConversionOptions, processBatch } from './utils/imageProcessing';
 import { saveAs } from 'file-saver';
+import { Link } from 'react-router-dom';
 
 // Define types for our application
 interface ImageFile {
@@ -606,6 +607,10 @@ const App: React.FC = () => {
       <main className="max-w-6xl mx-auto py-8">
         {renderStep()}
       </main>
+      <footer className="bg-gray-100 p-4 text-center">
+        <p className="text-sm text-gray-500">© {new Date().getFullYear()} Image Converter. All rights reserved.</p>
+        <p className="text-sm text-gray-500">Powered by <Link to="https://devtry.net" target='_blank'>Devtry</Link></p>
+      </footer>
     </div>
   );
 };
