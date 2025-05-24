@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { ConversionOptions, processBatch } from './utils/imageProcessing';
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
+import JSZip from 'jszip';
 
 // Define types for our application
 interface ImageFile {
@@ -207,12 +208,44 @@ const App: React.FC = () => {
   };
 
   // Download all files as zip
-  const downloadAllFiles = () => {
+  const downloadAllFiles = async () => {
+    // Create a new JSZip instance
+    const zip = new JSZip();
+    
+    // Add each file to the zip
+    let fileCount = 0;
     state.files.forEach(file => {
       if (file.result) {
-        saveAs(file.result, file.result.name);
+        zip.file(file.result.name, file.result);
+        fileCount++;
       }
     });
+    
+    // Only create zip if there are files to download
+    if (fileCount > 0) {
+      try {
+        // Generate the zip file with compression
+        const zipBlob = await zip.generateAsync({
+          type: 'blob',
+          compression: 'DEFLATE',
+          compressionOptions: { level: 6 }
+        });
+        
+        // Create a timestamp for unique filename
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        
+        // Save the zip file
+        saveAs(zipBlob, `converted_images_${timestamp}.zip`);
+      } catch (error) {
+        console.error('Error creating zip file:', error);
+        // Fallback to individual downloads if zip creation fails
+        state.files.forEach(file => {
+          if (file.result) {
+            saveAs(file.result, file.result.name);
+          }
+        });
+      }
+    }
   };
 
   // Reset and start over

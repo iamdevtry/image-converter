@@ -16,6 +16,7 @@
     "browser-image-compression": "^2.0.2",
     "browser-image-resizer": "^2.4.1",
     "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
